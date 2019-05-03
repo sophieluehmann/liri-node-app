@@ -51,7 +51,7 @@ spotify.search({ type: 'track', query: song }, function(err, data) {
     return console.log('Error occurred: ' + err);
   }
  
-console.log(data); 
+console.log(data.tracks); 
 });
 }
 
