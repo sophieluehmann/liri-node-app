@@ -13,7 +13,9 @@ if (process.argv[2] == "concert-this") {
     
 axios.get(queryURL).then(
   function(response) {
-    console.log(response);
+    console.log("Venue: " + response.data[0].venue.name);
+    console.log("Location: " + response.data[0].venue.city);
+    console.log("Date/Time: " + response.data[0].datetime);
   }
 );
 }
@@ -45,13 +47,29 @@ var spotify = new Spotify({
 });
 
 if (process.argv[2] == "spotify-this-song") {
+  if (!process.argv[3]) {
+    var song = "The-Sign";
+  } else {
     var song = process.argv.slice(3).join("-");
+  }
 spotify.search({ type: 'track', query: song }, function(err, data) {
   if (err) {
     return console.log('Error occurred: ' + err);
   }
- 
-console.log(data.tracks); 
+  //fix this
+  else if (song === "The-Sign") {
+    console.log("Artist: " + data.tracks.items[13].artists[0].name);
+    console.log(data.tracks.items[13].album.name);
+  }
+  else {
+  console.log("Artist(s):")
+  for (i = 0; i < data.tracks.items[0].artists.length; i++) {
+    console.log(data.tracks.items[0].artists[i].name); 
+  }
+  console.log("Song Name: " + data.tracks.items[0].name); 
+  console.log("Preview Song: " + data.tracks.items[0].preview_url);
+  console.log("Album: " + data.tracks.items[0].album.name);
+}
 });
 }
 
@@ -59,6 +77,7 @@ console.log(data.tracks);
 
 var fs = require("fs");
 
+//fix this 
 if (process.argv[2] == "do-what-it-says") {
 fs.readFile("random.txt", "utf8", function(error, data) {
 
@@ -68,7 +87,7 @@ fs.readFile("random.txt", "utf8", function(error, data) {
     var dataArr = data.split(",");
  
     if (dataArr[0] == "movie-this") {
-        var movie = process.argv.slice(3).join("-");
+        var movie = dataArr[1];
         console.log(movie);
     axios.get("http://www.omdbapi.com/?t=" + movie + "s&y=&plot=short&apikey=trilogy").then(
       function(response) {
@@ -85,27 +104,43 @@ fs.readFile("random.txt", "utf8", function(error, data) {
       }
     )}
     else if (dataArr[0] == "spotify-this-song") {
-        var song = process.argv.slice(3).join("-");
-    spotify.search({ type: 'track', query: song }, function(err, data) {
-      if (err) {
-        return console.log('Error occurred: ' + err);
+      var song = dataArr[1].join("-");
+      spotify.search({ type: 'track', query: song}, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+        //fix this
+        else if (dataArr[1] === "The-Sign") {
+          console.log("Artist: " + data.tracks.items[13].artists[0].name);
+          console.log(data.tracks.items[13].album.name);
+        }
+        else {
+        console.log("Artist(s):")
+        for (i = 0; i < data.tracks.items[0].artists.length; i++) {
+          console.log(data.tracks.items[0].artists[i].name); 
+        }
+        console.log("Song Name: " + data.tracks.items[0].name); 
+        console.log("Preview Song: " + data.tracks.items[0].preview_url);
+        console.log("Album: " + data.tracks.items[0].album.name);
       }
-     
-    console.log(data); 
-    });
+      });
     }
+
     else if (dataArr[0] == "concert-this") {
-        var artist = process.argv.slice(3).join("-");
-        
-    
-        var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
-        
-    axios.get(queryURL).then(
-      function(response) {
-        console.log(response);
+          var artist = dataArr[1];
+          
+      
+          var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+      
+          
+      axios.get(queryURL).then(
+        function(response) {
+          console.log("Venue: " + response.data[0].venue.name);
+          console.log("Location: " + response.data[0].venue.city);
+          console.log("Date/Time: " + response.data[0].datetime);
+        }
+      );
       }
-    );
-    }
   
   });
 }
