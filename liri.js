@@ -5,7 +5,7 @@ var axios = require("axios");
 
 
 if (process.argv[2] == "concert-this") {
-    var artist = process.argv.slice(3).join("-");
+    var artist = process.argv.slice(3).join("");
     
 
     var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
@@ -17,23 +17,23 @@ axios.get(queryURL).then(
     console.log("Location: " + response.data[0].venue.city);
     console.log("Date/Time: " + response.data[0].datetime);
   }
-);
+)
 }
 
 if (process.argv[2] == "movie-this") {
     var movie = process.argv.slice(3).join("-");
-    console.log(movie);
+// isnt the most accurate with getting the movie you want...not sure why or how to fix
 axios.get("http://www.omdbapi.com/?t=" + movie + "s&y=&plot=short&apikey=trilogy").then(
   function(response) {
-    console.log(response.data)
-    console.log(response.data.Title);
-    console.log(response.data.Year);
-    console.log(response.data.imdbRating);
+    
+    console.log("Title: " + response.data.Title);
+    console.log("Year: " + response.data.Year);
+    console.log("IMDB Rating: " + response.data.imdbRating);
     //console.log(response.data.rottentomatoes);
-    console.log(response.data.Country);
-    console.log(response.data.Language);
-    console.log(response.data.Plot);
-    console.log(response.data.Actors);
+    console.log("Country: " + response.data.Country);
+    console.log("Language: " + response.data.Language);
+    console.log("Plot: " + response.data.Plot);
+    console.log("Actors: " + response.data.Actors);
 
   }
 )}
@@ -91,7 +91,7 @@ fs.readFile("random.txt", "utf8", function(error, data) {
         console.log(movie);
     axios.get("http://www.omdbapi.com/?t=" + movie + "s&y=&plot=short&apikey=trilogy").then(
       function(response) {
-        console.log(response.data)
+        
         console.log(response.data.Title);
         console.log(response.data.Year);
         console.log(response.data.imdbRating);
@@ -104,7 +104,8 @@ fs.readFile("random.txt", "utf8", function(error, data) {
       }
     )}
     else if (dataArr[0] == "spotify-this-song") {
-      var song = dataArr[1].join("-");
+      var song = dataArr[1]
+      console.log(song);
       spotify.search({ type: 'track', query: song}, function(err, data) {
         if (err) {
           return console.log('Error occurred: ' + err);
@@ -127,7 +128,9 @@ fs.readFile("random.txt", "utf8", function(error, data) {
     }
 
     else if (dataArr[0] == "concert-this") {
-          var artist = dataArr[1];
+          var artist = dataArr[1].split(" ").join("-");
+          console.log(artist);
+          
           
       
           var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
